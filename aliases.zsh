@@ -24,6 +24,7 @@ ignore() { echo -n "\n$1" >> .gitignore }
 alias commits="svn log -v --xml | grep '<author.*/author>' | sort $* | uniq -c | sort -rn";
 alias gitsvn="/usr/local/Cellar/git/2.6.2/bin/git svn "
 alias git-log='git log --pretty=format:"%h - %an, %ar : %s" '
+alias fix-git-log='git log --pretty=format:"%h : %aD : %s" | grep bump'
 
 # git log --pretty=format:"%h - %aD, %ar : %s"
 
@@ -183,4 +184,30 @@ function blog-download() {
     cd ...
 }
 
+
+function gitFixTags() {
+    # Loop over tags
+    git tag -l | while read -r tag
+    do
+
+        # get the commit hash of the current tag
+        COMMIT_HASH=$(git rev-list -1 $tag)
+
+        # get the commit date of the tag and create a new tag using
+        # the tag's name and message. By specifying the environment
+        # environment variable GIT_COMMITTER_DATE before this is
+        # run, we override the default tag date. Note that if you
+        # specify the variable on a different line, it will apply to
+        # the current environment. This isn't desired as probably
+        # don't want your future tags to also have that past date.
+        # Of course, when you close your shell, the variable will no
+        # longer persist.
+        echo GIT_COMMITTER_DATE=\"$(git show $COMMIT_HASH --format=%aD | head -1)\" git tag -a -f $tag -m"$tag" $COMMIT_HASH
+
+
+    done
+
+    # Force push tags and overwrite ones on the server with the same name
+    # git push --tags --force
+}
 
