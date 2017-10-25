@@ -92,7 +92,7 @@ function swap() {
         echo "Usage: swap file1 file2"
     else
         local tmpfile=$(mktemp)
-        mv "$1" $tmpfile && mv "$2" "$1" && mv $tmpfile "$2"
+        mv "$1" $tmpfile && mv "$2" "$1" && mv $tmpfile "$2" 
     fi
 }
 
@@ -211,4 +211,13 @@ function gitFixTags() {
     # Force push tags and overwrite ones on the server with the same name
     # git push --tags --force
 }
+
+function __dotfiles_update_check() {
+    if (builtin cd $DOTFILES && git fetch && git status) | grep 'Your branch is behind'; then
+        echo '\n\n\n------------------------------------------------------------------------\n';
+        echo '\tYour .dotfiles should be updated!';
+        echo '\n------------------------------------------------------------------------\n\n';
+    fi
+}
+__dotfiles_update_check
 
