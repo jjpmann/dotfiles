@@ -2,7 +2,7 @@
 alias sudo='sudo'
 alias l='clear; echo ""; echo -------------- `pwd`; echo ""; ls -lah; echo ""';
 alias fs='clear; echo ""; echo -------------- `pwd`; echo ""; du -sch .[!.]* * |gsort -h; echo ""';
-alias myip="ifconfig | grep 'inet '"
+alias myip="echo INTERNAL && ifconfig | grep 'inet ' && echo PUBLIC && echo '       ' `dig +short myip.opendns.com @resolver1.opendns.com`"
 alias psg='ps aux | head -n 1; ps aux | grep -v grep | grep -i'
 alias copyssh="pbcopy < $HOME/.ssh/id_rsa.pub"
 alias reloadcli="source $HOME/.zshrc"
@@ -17,14 +17,15 @@ alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
 alias p='python '
-
+alias trashcan='open vnc://10.130.204.137'
 
 ## GIT or SVN
 ignore() { echo -n "\n$1" >> .gitignore }
 alias commits="svn log -v --xml | grep '<author.*/author>' | sort $* | uniq -c | sort -rn";
 alias gitsvn="/usr/local/Cellar/git/2.6.2/bin/git svn "
 alias git-log='git log --pretty=format:"%h - %an, %ar : %s" '
-alias fix-git-log='git log --pretty=format:"%h : %aD : %s" | grep bump'
+alias gcp='git checkout production'
+alias gs='git status'
 
 # git log --pretty=format:"%h - %aD, %ar : %s"
 
@@ -33,7 +34,7 @@ alias selenium='nohup java -jar ~/bin/selenium-server-standalone.jar > ~/seleniu
 alias chrome='nohup chromedriver --port=4446 --log=~/chrome.log > ~/chrome.log &'
 
 ## INFO
-alias publicip='curl ip.appspot.com'                # myip:         Public facing IP Address
+alias publicip='dig +short myip.opendns.com @resolver1.opendns.com'                # myip:         Public facing IP Address
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
