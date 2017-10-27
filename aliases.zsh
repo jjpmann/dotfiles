@@ -164,6 +164,17 @@ function jpg(){
     done
 }
 
+function rom-search() {
+    search="$@"
+    echo $search
+    emuparadise.py -s $search
+}
+
+function rom-download() {
+    rom="$@"
+    echo $rom
+    curl -L -O --cookie "downloadcaptcha=1" --referer https://www.emuparadise.me $(emuparadise.py -d $rom)
+}
 
 function blog-download() {
     if [ $# -lt 1 ]; then
