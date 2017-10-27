@@ -2,7 +2,7 @@
 alias sudo='sudo'
 alias l='clear; echo ""; echo -------------- `pwd`; echo ""; ls -lah; echo ""';
 alias fs='clear; echo ""; echo -------------- `pwd`; echo ""; du -sch .[!.]* * |gsort -h; echo ""';
-alias myip="ifconfig | grep 'inet '"
+alias myip="echo INTERNAL && ifconfig | grep 'inet ' && echo PUBLIC && echo '       ' `dig +short myip.opendns.com @resolver1.opendns.com`"
 alias psg='ps aux | head -n 1; ps aux | grep -v grep | grep -i'
 alias copyssh="pbcopy < $HOME/.ssh/id_rsa.pub"
 alias reloadcli="source $HOME/.zshrc"
@@ -17,13 +17,15 @@ alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
 alias p='python '
-
+alias trashcan='open vnc://10.130.204.137'
 
 ## GIT or SVN
 ignore() { echo -n "\n$1" >> .gitignore }
 alias commits="svn log -v --xml | grep '<author.*/author>' | sort $* | uniq -c | sort -rn";
 alias gitsvn="/usr/local/Cellar/git/2.6.2/bin/git svn "
 alias git-log='git log --pretty=format:"%h - %an, %ar : %s" '
+alias gcp='git checkout production'
+alias gs='git status'
 
 # git log --pretty=format:"%h - %aD, %ar : %s"
 
@@ -32,7 +34,7 @@ alias selenium='nohup java -jar ~/bin/selenium-server-standalone.jar > ~/seleniu
 alias chrome='nohup chromedriver --port=4446 --log=~/chrome.log > ~/chrome.log &'
 
 ## INFO
-alias publicip='curl ip.appspot.com'                # myip:         Public facing IP Address
+alias publicip='dig +short myip.opendns.com @resolver1.opendns.com'                # myip:         Public facing IP Address
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
@@ -90,7 +92,7 @@ function swap() {
         echo "Usage: swap file1 file2"
     else
         local tmpfile=$(mktemp)
-        mv "$1" $tmpfile && mv "$2" "$1" && mv $tmpfile "$2"
+        mv "$1" $tmpfile && mv "$2" "$1" && mv $tmpfile "$2" 
     fi
 }
 
@@ -194,4 +196,39 @@ function blog-download() {
     cd ...
 }
 
+
+function gitFixTags() {
+    # Loop over tags
+    git tag -l | while read -r tag
+    do
+
+        # get the commit hash of the current tag
+        COMMIT_HASH=$(git rev-list -1 $tag)
+
+        # get the commit date of the tag and create a new tag using
+        # the tag's name and message. By specifying the environment
+        # environment variable GIT_COMMITTER_DATE before this is
+        # run, we override the default tag date. Note that if you
+        # specify the variable on a different line, it will apply to
+        # the current environment. This isn't desired as probably
+        # don't want your future tags to also have that past date.
+        # Of course, when you close your shell, the variable will no
+        # longer persist.
+        echo GIT_COMMITTER_DATE=\"$(git show $COMMIT_HASH --format=%aD | head -1)\" git tag -a -f $tag -m"$tag" $COMMIT_HASH
+
+
+    done
+
+    # Force push tags and overwrite ones on the server with the same name
+    # git push --tags --force
+}
+
+function __dotfiles_update_check() {
+    if (builtin cd $DOTFILES && git fetch && git status) | grep 'Your branch is behind'; then
+        echo '\n\n\n------------------------------------------------------------------------\n';
+        echo '\tYour .dotfiles should be updated!';
+        echo '\n------------------------------------------------------------------------\n\n';
+    fi
+}
+__dotfiles_update_check
 

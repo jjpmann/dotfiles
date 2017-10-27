@@ -26,7 +26,10 @@ PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 #PATH="$DOTFILES/bin:$PATH"
 
 # rvm
-PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
+#PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
+
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+source /usr/local/opt/chruby/share/chruby/auto.sh
 
 # git 
 PATH="/usr/local/git/bin:$PATH";
@@ -41,6 +44,8 @@ PATH="$HOME/bin:$PATH";
 PATH="$HOME/.spark-installer:$PATH";
 
 export PATH=$PATH;
+
+
 
 ## OTHERS
 
