@@ -28,8 +28,11 @@ PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 # rvm
 #PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
 
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-source /usr/local/opt/chruby/share/chruby/auto.sh
+if [ -d "/usr/local/opt/chruby/share/chruby" ] 
+then
+    source /usr/local/opt/chruby/share/chruby/chruby.sh
+    source /usr/local/opt/chruby/share/chruby/auto.sh
+fi
 
 # git 
 PATH="/usr/local/git/bin:$PATH";
