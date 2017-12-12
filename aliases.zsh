@@ -17,7 +17,7 @@ alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
 alias p='python '
-alias trashcan='open vnc://10.130.204.137'
+alias trashcan='open vnc://10.130.204.128'
 
 ## GIT or SVN
 ignore() { echo -n "\n$1" >> .gitignore }
@@ -48,7 +48,8 @@ alias finderShowHidden='defaults write com.apple.finder AppleShowAllFiles TRUE'
 alias finderHideHidden='defaults write com.apple.finder AppleShowAllFiles FALSE'
 
 ## Edit with Subl
-alias _alias="subl ~/.shell-alias-path"
+alias _dotfiles="subl ~/.dotfiles"
+alias _alias="subl ~/.dotfiles/aliases.zsh"
 alias _profile="subl ~/.zshrc"
 alias _ssh="subl ~/.ssh/config"
 alias _hosts="subl /etc/hosts"

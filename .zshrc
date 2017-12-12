@@ -1,8 +1,6 @@
 # Path to your dotfiles installation.
 export DOTFILES=$HOME/.dotfiles
 
-. $HOME/Dropbox/Mackup/.oh-my-zsh/custom/plugins/z/z.sh
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -54,7 +52,7 @@ ZSH_CUSTOM="$HOME/Dropbox/Mackup/.oh-my-zsh/custom"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(brew bundler composer eecli git git-extras git-open github httpie npm osx rvm sublime vagrant zsh-vscode)
+plugins=(brew bundler composer eecli git git-extras git-open github httpie npm osx rvm sublime vagrant zsh-vscode z)
 
 # Activate Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
