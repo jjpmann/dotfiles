@@ -70,7 +70,8 @@ alias pa="php artisan"
 alias tinker="php artisan tinker"
 
 # Brew
-alias bs="brew services list"
+alias bs="brew services "
+alias bsl="brew services list"
 alias bsr="brew services restart "
 alias bsstart="brew services start "
 alias bsstop="brew services stop "
