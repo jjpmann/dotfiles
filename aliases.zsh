@@ -1,8 +1,8 @@
 #### GLOBAL
 alias sudo='sudo'
 alias l='clear; echo ""; echo -------------- `pwd`; echo ""; ls -lah; echo ""';
-alias fs='clear; echo ""; echo -------------- `pwd`; echo ""; du -sch .[!.]* * |gsort -h; echo ""';
-alias myip="echo INTERNAL && ifconfig | grep 'inet ' && echo PUBLIC && echo '       ' `dig +short myip.opendns.com @resolver1.opendns.com`"
+alias fs='clear; echo ""; echo -------------- `pwd`; echo ""; du -hd1; echo ""';
+alias myip="echo INTERNAL && ifconfig | grep 'inet ' && echo PUBLIC && echo '       ' \`dig +short myip.opendns.com @resolver1.opendns.com\`"
 alias psg='ps aux | head -n 1; ps aux | grep -v grep | grep -i'
 alias copyssh="pbcopy < $HOME/.ssh/id_rsa.pub"
 alias reloadcli="source $HOME/.zshrc"
@@ -12,12 +12,22 @@ alias ll="$(brew --prefix coreutils)/libexec/gnubin/ls -ahlF --color --group-dir
 alias shrug="echo '¯\_(ツ)_/¯' | pbcopy"
 alias mykey="cat ~/.ssh/id_rsa.pub | pbcopy"
 alias jjpkey="cat ~/.ssh/jjpmann-4096-rsa.pub | pbcopy"
+alias supportkey="cat ~/.ssh/id_rsa_wdgdc.pub | pbcopy"
+alias wdgkey="cat ~/.ssh/wdg_id_rsa.pub | pbcopy"
 #alias psql='/Applications/Postgres.app/Contents/Versions/9.4/bin/psql -p5432'
 alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
-alias p='python '
+alias py='python '
 alias trashcan='open vnc://10.130.204.128'
+
+alias p='php-version '
+
+alias my='mysql -u root -psecret '
+alias code='/usr/local/bin/code-insiders'
+
+alias dd_mysql='mysql -h 127.0.0.1 -P 33068 -u drupaluser '
+alias dd_mysqldump='mysqldump -h 127.0.0.1 -P 33068 -u drupaluser '
 
 ## GIT or SVN
 ignore() { echo -n "\n$1" >> .gitignore }

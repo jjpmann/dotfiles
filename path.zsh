@@ -2,16 +2,19 @@
 PATH="$HOME/.node/bin:$PATH"
 
 # Use project specific binaries before global ones
-PATH="node_modules/.bin:vendor/bin:$PATH"
+PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:$PATH"
+
 
 # global composer path
 PATH="$HOME/.composer/vendor/bin:$PATH";
 # for php apps
 PATH="./vendor/bin:$PATH";
+# add Terminus for Pantheon
+PATH="$HOME/.terminus/vendor/bin:$PATH";
 
 
 # Make sure PHP 7.1 is loaded
-PATH="$(brew --prefix homebrew/php/php71)/bin:$PATH"
+source ~/git/php-version/php-version.sh && php-version 7.1
 
 # Make sure coreutils are loaded before system commands
 # I've disabled this for now because I only use "ls" which is
@@ -61,4 +64,3 @@ export EDITOR='subl'
 
 export SLIMERJSLAUNCHER=/Applications/Firefox50.app/Contents/MacOS/firefox
 
-source $(brew --prefix php-version)/php-version.sh && php-version 7.0
