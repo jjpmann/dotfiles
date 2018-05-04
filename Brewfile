@@ -4,7 +4,6 @@ tap 'caskroom/fonts'
 tap 'caskroom/versions'
 tap 'homebrew/bundle'
 tap 'homebrew/dupes'
-tap 'homebrew/php'
 
 # Install ZSH
 brew 'zsh'
@@ -43,11 +42,12 @@ brew 'jpeg'
 
 # Development
 brew 'php-version'
-brew 'php54', args: ['with-debug']
-brew 'php55', args: ['with-debug']
-brew 'php56', args: ['with-debug']
-brew 'php70', args: ['with-debug']
-brew 'php71', args: ['with-debug']
+#brew 'php54', args: ['with-debug']
+#brew 'php55', args: ['with-debug']
+brew 'php@5.6', args: ['with-debug']
+brew 'php@7.0', args: ['with-debug']
+brew 'php@7.1', args: ['with-debug']
+brew 'php@7.2', args: ['with-debug']
 #brew 'php71-intl'
 brew 'mariadb'
 
@@ -89,7 +89,7 @@ cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
 
 # Install Mac App Store apps
-#mas '1Password', id: 443987910
+mas '1Password', id: 443987910
 #mas 'Byword', id: 420212497
 #mas 'Deckset', id: 847496013
 #mas 'Gapplin', id: 768053424
