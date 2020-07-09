@@ -52,7 +52,7 @@ ZSH_CUSTOM="$HOME/Dropbox/Mackup/.oh-my-zsh/custom"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(brew bundler composer eecli git git-extras git-open github httpie npm osx rvm sublime vagrant zsh-vscode z iterm2)
+plugins=(brew bundler composer git git-extras github httpie npm osx rvm sublime z iterm2)
 
 # Activate Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
@@ -66,6 +66,7 @@ source $DOTFILES/path.zsh
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
@@ -78,3 +79,6 @@ export LANG=en_US.UTF-8
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
+
+
+# iterm2_tab_color 100
