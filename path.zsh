@@ -4,6 +4,7 @@ PATH="$HOME/.node/bin:$PATH"
 # Use project specific binaries before global ones
 PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:$PATH"
 
+PATH="$HOME/bin:$PATH"
 
 # global composer path
 PATH="$HOME/.composer/vendor/bin:$PATH";
@@ -11,10 +12,10 @@ PATH="$HOME/.composer/vendor/bin:$PATH";
 PATH="./vendor/bin:$PATH";
 # add Terminus for Pantheon
 PATH="$HOME/.terminus/vendor/bin:$PATH";
+# add Drush for Pantheon
+PATH="$HOME/git/drush:$PATH";
 
 
-# Make sure PHP 7.1 is loaded
-source ~/git/php-version/php-version.sh && php-version 7.1
 
 # Make sure coreutils are loaded before system commands
 # I've disabled this for now because I only use "ls" which is
@@ -47,7 +48,10 @@ PATH="$HOME/google-cloud-sdk/bin:$PATH";
 PATH="$HOME/bin:$PATH";
 
 # spark
-PATH="$HOME/.spark-installer:$PATH";
+# PATH="$HOME/.spark-installer:$PATH";
+
+## Custom Valet
+PATH="/Users/jerryprice/git/valet;$PATH";
 
 export PATH=$PATH;
 
@@ -64,3 +68,5 @@ export EDITOR='subl'
 
 export SLIMERJSLAUNCHER=/Applications/Firefox50.app/Contents/MacOS/firefox
 
+# Make sure PHP 7.1 is loaded
+source ~/git/php-version/php-version.sh && php-version 7.3
