@@ -48,6 +48,8 @@ brew 'php@5.6', args: ['with-debug']
 brew 'php@7.0', args: ['with-debug']
 brew 'php@7.1', args: ['with-debug']
 brew 'php@7.2', args: ['with-debug']
+brew 'php@7.3', args: ['with-debug']
+brew 'php@7.4', args: ['with-debug']
 #brew 'php71-intl'
 brew 'mariadb'
 
@@ -55,6 +57,7 @@ brew 'mariadb'
 cask 'aerial'
 cask 'alfred'
 #cask 'caffeine'
+cask 'clipy'
 cask 'dropbox'
 cask 'firefox'
 cask 'google-chrome'
@@ -74,6 +77,7 @@ cask 'vagrant'
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'vlc'
+cask 'visual-studio-code'
 
 # Quicklook
 cask 'qlcolorcode'
