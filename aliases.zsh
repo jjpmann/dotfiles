@@ -14,19 +14,25 @@ alias mykey="cat ~/.ssh/id_rsa.pub | pbcopy"
 alias jjpkey="cat ~/.ssh/jjpmann-4096-rsa.pub | pbcopy"
 alias supportkey="cat ~/.ssh/id_rsa_wdgdc.pub | pbcopy"
 alias wdgkey="cat ~/.ssh/wdg_id_rsa.pub | pbcopy"
-#alias psql='/Applications/Postgres.app/Contents/Versions/9.4/bin/psql -p5432'
 alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
 alias py='python '
 alias trashcan='open vnc://10.130.204.128'
-alias new='ls -laht | head'
+alias new='ls -dlaht * | head'
+alias big='ls -Slh | head'
+alias laptop='open vnc://192.168.1.107'
+alias ashleypc='open vnc://192.168.1.238'
 
+alias sound_headphones="switchaudiosource -u '38-18-4c-bd-e7-8f:output'"
+alias sound_speakers="switchaudiosource -u 'AppleUSBAudioEngine:Logitech:Logitech USB Headset:1200000:2,1'"
+					   
 
 alias p='php-version '
-
 alias my='mysql -u root -psecret '
 alias code='/usr/local/bin/code-insiders'
+alias listdb="mysql -e 'show databases' "
+alias grepdb="mysql -e 'show databases' | grep "
 
 alias dd_mysql='mysql -h 127.0.0.1 -P 33068 -u drupaluser --password="" '
 alias dd_mysqldump='mysqldump -h 127.0.0.1 -P 33068 -u drupaluser --password="" '
@@ -45,12 +51,17 @@ alias git-large-files="git rev-list --objects --all \
 | sort --numeric-sort --key=2 \
 | cut -c 1-12,41- \
 | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest"
+alias git-recent='git branch -l --sort=-committerdate | cat'
+
+
+alias test='echo "$1" || 2'
+
 
 
 
 # git log --pretty=format:"%h - %aD, %ar : %s"
 
-alias bfg='java -jar ~/bfg-1.12.8.jar '
+#alias bfg='java -jar ~/bfg-1.12.8.jar '
 alias selenium='nohup java -jar ~/bin/selenium-server-standalone.jar > ~/selenium.log &'
 #alias chrome='nohup chromedriver --port=4446 --log=~/chrome.log > ~/chrome.log &'
 
@@ -70,7 +81,7 @@ alias finderHideHidden='defaults write com.apple.finder AppleShowAllFiles FALSE'
 
 ## Edit with Subl
 alias _dotfiles="subl ~/.dotfiles"
-alias _alias="subl ~/.dotfiles/aliases.zsh"
+alias _alias="subl ~/Dropbox/Mackup/home/.protected-aliases.zsh ~/.dotfiles/aliases.zsh"
 alias _profile="subl ~/.zshrc"
 alias _ssh="subl ~/.ssh/config"
 alias _hosts="subl /etc/hosts"
@@ -114,11 +125,18 @@ alias vreload="vagrant reload"
 alias vrebuild="vagrant destroy --force && vagrant up"
 
 
-
+function gitlast() {
+	if [ $# -ne 1 ]; then
+		i=1
+	else
+		i=$1
+	fi
+	git checkout @{-$i}
+}
 
 function importdb() {
 	if [ $# -ne 2 ]; then
-		echo "Usage: importdb database sqlfile"
+		echo "Usage: importdb <database> <sqlfile>"
 	fi
 
 	# check if file
@@ -144,7 +162,7 @@ function importdb() {
 # Swap contents of two files
 function swap() {
 	if [ $# -ne 2 ]; then
-		echo "Usage: swap file1 file2"
+		echo "Usage: swap <file1> <file2>"
 	else
 		local tmpfile=$(mktemp)
 		mv "$1" $tmpfile && mv "$2" "$1" && mv $tmpfile "$2"
@@ -158,8 +176,8 @@ function logout() {
 
 function git-orphan() {
 	if [ $# -lt 1 ]; then
-		echo "Missing argument";
-		echo "git-orphan new-orphan-branch";
+		# echo "Missing argument";
+		echo "git-orphan <new-orphan-branch>";
 		return 1;
 	fi
 
@@ -186,12 +204,52 @@ function mktouch() {
 
 function showcert() {
 	if [ $# -lt 1 ]; then
-		echo "Missing argument";
+		echo "Usage: showcert <domain> [<ip>]"
 		return 1;
 	fi
-	echo | openssl s_client -showcerts -servername $1 -connect $1:443 2>/dev/null | openssl x509 -inform pem -noout -text
+
+	if [ $# -lt 2 ]; then
+		2=$1
+	fi
+
+	echo | openssl s_client -showcerts -servername $1 -connect $2:443 2>/dev/null | openssl x509 -inform pem -noout -text
 }
 
+function certcheck() {
+        if [ -z "$1" ]
+        then
+                echo "Usage: certcheck <url> [<ip>] [--full]"
+                return 1
+        fi
+        url="$1"
+        ip="$2"
+        full="$3"
+        if [ "$ip" = "--full" ]
+        then
+                full="--full"
+                ip=""
+        fi
+        if [ -n "$full" ] && [ "$full" != "--full" ]
+        then
+                echo "Unknown parameter '$full'"
+                full=""
+        fi
+        cmd="echo | openssl s_client -showcerts"
+        if [ -z "$ip" ] # No IP (no SNI)
+        then
+                cmd="$cmd -connect $url:443"
+        else
+                cmd="$cmd -connect $ip:443 -servername $url"
+        fi
+        cmd="$cmd 2> /dev/null"
+        cmd="$cmd | openssl x509 -inform pem -noout -text"
+        if [ -z "$full" ] # Not full
+        then
+                cmd="$cmd | grep -A3 -B4 Validity"
+        fi
+        # echo "$cmd"
+        eval $cmd
+}
 
 export JPGQUALITY='90'
 export PNGQUALITY='75-80'
@@ -250,6 +308,14 @@ function jpg(){
 	done
 }
 
+function png2jpg(){
+	if [ $# -lt 1 ]; then
+		echo "Missing argument";
+		return 1;
+	fi
+	
+	sips --setProperty format jpeg $1 --out $1.jpg
+}
 
 function crawl () {
 	if [ $# -lt 1 ]; then
@@ -326,18 +392,41 @@ function php-fix-arrays () {
 	phpcbf $1 --standard=Generic --sniffs=Generic.Arrays.DisallowLongArraySyntax
 }
 
-function restart-php () {
-	/usr/local/bin/brew services restart php@7.1 && 
-	/usr/local/bin/brew services restart php@7.2 && 
-	/usr/local/bin/brew services restart php@7.3 && 
-	/usr/local/bin/brew services restart php@7.4
+function php-restart () {
+	/usr/local/bin/brew services restart php@5.6 
+	/usr/local/bin/brew services restart php@7.1 
+	/usr/local/bin/brew services restart php@7.2 
+	/usr/local/bin/brew services restart php@7.3 
+	/usr/local/bin/brew services restart php@7.4 
+	/usr/local/bin/brew services restart php
+	ln -nfs /Users/jerryprice/.config/valet/7.4.sock /Users/jerryprice/.config/valet/valet.sock
+}
+
+function php-stop () {
+	/usr/local/bin/brew services stop php@5.6 
+	/usr/local/bin/brew services stop php@7.1 
+	/usr/local/bin/brew services stop php@7.2 
+	/usr/local/bin/brew services stop php@7.3 
+	/usr/local/bin/brew services stop php@7.4 
+	/usr/local/bin/brew services stop php
+}
+
+function php-start () {
+	/usr/local/bin/brew services start php@5.6 
+	/usr/local/bin/brew services start php@7.1 
+	/usr/local/bin/brew services start php@7.2 
+	/usr/local/bin/brew services start php@7.3 
+	/usr/local/bin/brew services start php@7.4 
+	/usr/local/bin/brew services start php
+	ln -nfs /Users/jerryprice/.config/valet/7.4.sock /Users/jerryprice/.config/valet/valet.sock
 }
 
 function unserialize() {
 
 	if [[ $1 ]];
 	then
-		php -r " echo print_r(unserialize('"$1"')); echo \"\\n\";"
+		echo "dump( unserialize('"$1"') );" | php -a
+		# php -r " echo print_r(unserialize('"$1"')); echo \"\\n\";"
 	else
 		STRING=`pbpaste`
 		php -r " echo print_r(unserialize('"$STRING"')); echo \"\\n\";"
@@ -345,10 +434,96 @@ function unserialize() {
 
 }
 
+function vipwp() {
+	
+	if [ $# -lt 1 ]; then
+		echo "Usage: vipwp <@site.env> <cmd...>"
+		return 1;
+	fi
+
+	TIME=$(date +"%Y-%m-%d %H:%M")
+	SITE=$1
+	CMD="${@:2}"
+	VIP=$(which vip)
+	RUN="vip wp $SITE -y -- $CMD"
+	FOLDER=$HOME/vip-logs
+	FILE=$FOLDER/${SITE/@/}.txt
+	
+	# echo $TIME
+	# echo SITE=$SITE
+	# echo CMD="$CMD"
+	# echo RUN=$RUN
+	# echo FILE=$FILE
+	
+	[ -d $FOLDER ] || mkdir $FOLDER
+	echo "\n\n$TIME : $RUN" >> "$FILE"
+	eval ${RUN} | tee -a $FILE
+}
+
+function pantheon_rsync_push() {
+	
+	if [ $# -ne 4 ]; then
+		echo "Usage: pantheon_rsync_push <site> <env> <local-path> <remote-path>"
+		return 1;
+	fi
+
+	#!/bin/bash
+	# Site UUID from Dashboard URL, eg 12345678-1234-1234-abcd-0123456789ab
+	SITE=$1
+	ENV=$2
+
+	SITE_UUID=`terminus site:lookup $1`
+	SITE_LOOKUP_ERROR="$?"
+
+	if [ $SITE_LOOKUP_ERROR -ne 0 ]; then
+		return;
+	fi
+
+
+	echo "Site: $1 ($SITE_UUID) Env: $2"
+	echo "push $3 -> files/$4"
+	read "brave?Continue?. [n/y] "
+
+	echo rsync --verbose --compress --archive --size-only --checksum --ipv4 --progress -e 'ssh -p 2222' $3 --temp-dir=~/tmp/ $ENV.$SITE_UUID@appserver.$ENV.$SITE_UUID.drush.in:files/$4
+	if [[ "$brave" =~ ^[Yy]$ ]]; then
+		rsync --verbose --compress --archive --size-only --checksum --ipv4 --progress -e 'ssh -p 2222' $3 --temp-dir=~/tmp/ $ENV.$SITE_UUID@appserver.$ENV.$SITE_UUID.drush.in:files/$4
+	fi
+
+}
+
+function pantheon_rsync_pull() {
+	
+	if [ $# -ne 4 ]; then
+		echo "Usage: pantheon_rsync_pull <site> <env> <remote-path> <local-path>"
+		return 1;
+	fi
+
+	#!/bin/bash
+	# Site UUID from Dashboard URL, eg 12345678-1234-1234-abcd-0123456789ab
+	SITE=$1
+	ENV=$2
+
+	SITE_UUID=`terminus site:lookup $1`
+	SITE_LOOKUP_ERROR="$?"
+
+	if [ $SITE_LOOKUP_ERROR -ne 0 ]; then
+		return;
+	fi
+
+	echo "Site: $1 ($SITE_UUID) Env: $2"
+	echo "pull files$3 -> $4"
+	read "brave?Continue?. [n/y] "
+
+	echo rsync --verbose --compress --archive --copy-unsafe-links --size-only --checksum --ipv4 --progress -e 'ssh -p 2222' $ENV.$SITE_UUID@appserver.$ENV.$SITE_UUID.drush.in:files$3 $4
+	if [[ "$brave" =~ ^[Yy]$ ]]; then
+		rsync --verbose --compress --archive --copy-unsafe-links --size-only --checksum --ipv4 --progress -e 'ssh -p 2222' $ENV.$SITE_UUID@appserver.$ENV.$SITE_UUID.drush.in:files$3 $4
+	fi
+}
+
 function pantheon_logs() {
 
 	if [ $# -ne 2 ]; then
-		echo "Usage: pantheon_logs site env"
+		echo "Usage: pantheon_logs <site> <env>"
 		return 1;
 	fi
 
@@ -374,7 +549,7 @@ function pantheon_logs() {
 
 		#Include MySQL logsls -l
 		db_server=`dig dbserver.$ENV.$SITE_UUID.drush.in +short`
-		rsync -rlvz --size-only --ipv4 --progress -e 'ssh -p 2222' $ENV.$SITE_UUID@dbserver.$ENV.$SITE_UUID.drush.in:logs db_server_$db_server
+		rsync -rlvzt --size-only --ipv4 --progress -e 'ssh -p 2222' $ENV.$SITE_UUID@dbserver.$ENV.$SITE_UUID.drush.in:logs db_server_$db_server
 	fi
 }
 
@@ -411,7 +586,26 @@ function gitFixTags() {
 	# git push --tags --force
 }
 
+function vip-sites(){
 
+	if [ $# -ne 2 ]; then
+		echo "Usage: vip-sites <@site.env> <wp-command>"
+		echo "  examples: "
+		echo "     vip-sites @site.development 'option get siteurl'"
+		echo "     vip-sites @site.development 'cache flush'"
+		return 1;
+	fi
+
+	temp_file=$(mktemp).sh
+
+	echo "## VIP-SITES: $1 - '$2'" > $temp_file;
+	vip wp $1 -y -- site list --field=url | xargs -I % sh -c 'echo "vip wp '$1' -y -- '$2' --url=%" >> '$temp_file
+
+	cat $temp_file;
+	chmod +x $temp_file;
+	bash $temp_file;
+	rm $temp_file;
+}
 
 function __dotfiles_update_check() {
 	if (builtin cd $DOTFILES && git fetch && git status) | grep 'Your branch is behind'; then
