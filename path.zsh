@@ -1,21 +1,3 @@
-# Load Node global installed binaries
-PATH="$HOME/.node/bin:$PATH"
-
-# Use project specific binaries before global ones
-PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:$PATH"
-
-PATH="$HOME/bin:$PATH"
-
-# global composer path
-PATH="$HOME/.composer/vendor/bin:$PATH";
-# for php apps
-PATH="./vendor/bin:$PATH";
-# add Terminus for Pantheon
-PATH="$HOME/.terminus/vendor/bin:$PATH";
-# add Drush for Pantheon
-PATH="$HOME/git/drush:$PATH";
-
-
 
 # Make sure coreutils are loaded before system commands
 # I've disabled this for now because I only use "ls" which is
@@ -32,14 +14,16 @@ PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 # rvm
 #PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
 
-if [ -d "/usr/local/opt/chruby/share/chruby" ] 
-then
-    source /usr/local/opt/chruby/share/chruby/chruby.sh
-    source /usr/local/opt/chruby/share/chruby/auto.sh
-fi
+# if [ -d "/usr/local/opt/chruby/share/chruby" ] 
+# then
+#     source /usr/local/opt/chruby/share/chruby/chruby.sh
+#     source /usr/local/opt/chruby/share/chruby/auto.sh
+# fi
 
-# git 
-PATH="/usr/local/git/bin:$PATH";
+# global composer path
+PATH="$HOME/.composer/vendor/bin:$PATH";
+# add Terminus for Pantheon
+PATH="$HOME/.terminus/vendor/bin:$PATH";
 # go code
 PATH="$HOME/gocode/bin:$PATH";
 # google cloud SDK
@@ -51,11 +35,22 @@ PATH="$HOME/bin:$PATH";
 # PATH="$HOME/.spark-installer:$PATH";
 
 ## Custom Valet
-PATH="/Users/jerryprice/git/valet;$PATH";
+PATH="/Users/jerryprice/git/valet:$PATH";
+
+# Load Node global installed binaries
+PATH="$PATH:$HOME/.node/bin"
 
 export PATH=$PATH;
 
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+
+# Use project specific binaries before global ones
+PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:$PATH"
+
+export PATH=$PATH;
 
 ## OTHERS
 
@@ -69,4 +64,4 @@ export EDITOR='subl'
 export SLIMERJSLAUNCHER=/Applications/Firefox50.app/Contents/MacOS/firefox
 
 # Make sure PHP 7.1 is loaded
-source ~/git/php-version/php-version.sh && php-version 7.3
+source ~/git/php-version/php-version.sh && php-version 7.4
