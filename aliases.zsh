@@ -18,14 +18,20 @@ alias hg='history | grep '
 alias ping='ping -c 3'
 alias weather="curl -4 http://wttr.in"
 alias py='python '
-alias trashcan='open vnc://10.130.204.128'
-alias new='ls -dlaht * | head'
+alias new='ls -dlaht ./* | head'
 alias big='ls -Slh | head'
-alias laptop='open vnc://192.168.1.107'
-alias ashleypc='open vnc://192.168.1.238'
+
+alias dc='docker-compose '
+
+alias pantheon-site-list='terminus site:list  --fields=name,id,plan_name'
+
+alias laptop='open vnc://10.0.1.169'
+alias ashleypc='open vnc://10.0.0.212'
+alias skylerpc='open vnc://10.0.1.136'
+alias laylapc='open vnc://10.0.0.214'
 
 alias sound_headphones="switchaudiosource -u '38-18-4c-bd-e7-8f:output'"
-alias sound_speakers="switchaudiosource -u 'AppleUSBAudioEngine:Logitech:Logitech USB Headset:1200000:2,1'"
+alias sound_speakers="switchaudiosource -u 'AppleUSBAudioEngine:Logitech:Logitech USB Headset:3300000:2,1'"
 					   
 
 alias p='php-version '
@@ -36,6 +42,8 @@ alias grepdb="mysql -e 'show databases' | grep "
 
 alias dd_mysql='mysql -h 127.0.0.1 -P 33068 -u drupaluser --password="" '
 alias dd_mysqldump='mysqldump -h 127.0.0.1 -P 33068 -u drupaluser --password="" '
+
+alias mysql_tower='mysql --defaults-group-suffix=2 '
 
 ## GIT or SVN
 ignore() { echo -n "\n$1" >> .gitignore }
@@ -52,7 +60,7 @@ alias git-large-files="git rev-list --objects --all \
 | cut -c 1-12,41- \
 | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest"
 alias git-recent='git branch -l --sort=-committerdate | cat'
-
+alias git-deploy='git commit --allow-empty -m "deploy `date`"'
 
 alias test='echo "$1" || 2'
 
@@ -67,6 +75,7 @@ alias selenium='nohup java -jar ~/bin/selenium-server-standalone.jar > ~/seleniu
 
 ## INFO
 alias publicip='dig +short myip.opendns.com @resolver1.opendns.com'                # myip:         Public facing IP Address
+
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
@@ -79,13 +88,25 @@ alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rul
 alias finderShowHidden='defaults write com.apple.finder AppleShowAllFiles TRUE'
 alias finderHideHidden='defaults write com.apple.finder AppleShowAllFiles FALSE'
 
+
+function ipinfo() { 
+	if [ $# -ne 1 ]; then
+		
+		http --print=b ipinfo.io\?token=$IPINFO_TOKEN
+		return 0;
+	fi
+	dig +short "$1" | xargs -I % /usr/local/bin/http --ignore-stdin --print=b https://ipinfo.io/%\?token=$IPINFO_TOKEN
+}
+
 ## Edit with Subl
 alias _dotfiles="subl ~/.dotfiles"
 alias _alias="subl ~/Dropbox/Mackup/home/.protected-aliases.zsh ~/.dotfiles/aliases.zsh"
 alias _profile="subl ~/.zshrc"
 alias _ssh="subl ~/.ssh/config"
+alias _haproxy="subl /usr/local/etc/haproxy/haproxy.cfg"
 alias _hosts="subl /etc/hosts"
 alias _dns="subl /Users/jerryprice/.config/valet/dnsmasq.conf"
+alias _valet="subl /Users/jerryprice/sublime-projects/valet.sublime-workspace"
 alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="subl ~/.oh-my-zsh"
 
@@ -108,6 +129,7 @@ alias bsl="brew services list"
 alias bsr="brew services restart "
 alias bsstart="brew services start "
 alias bsstop="brew services stop "
+alias sbsl="sudo brew services list"
 alias sbsr="sudo brew services restart "
 alias sbsstart="sudo brew services start "
 alias sbsstop="sudo brew services stop "
@@ -157,7 +179,26 @@ function importdb() {
 }
 
 
+function create_db_and_user() {
 
+	if [ $# -lt 1 ]; then
+		# echo "Missing argument";
+		echo "$0 <site>";
+		return 1;
+	fi
+
+	echo "Creating database (enter mysql root password when prompted)..."
+	site=$1;
+	dbname=${site//[.-]/_};
+	dbpass="$(openssl rand -base64 16)";
+
+	echo "create database ${dbname}; CREATE USER '${dbname}'@'localhost' IDENTIFIED BY '${dbpass}'; GRANT ALL PRIVILEGES ON ${dbname}.* TO \`${dbname}\`@\`localhost\`; FLUSH PRIVILEGES;" | sudo mysq
+
+	echo "dbname: $dbname"
+	echo "dbuser: $dbname"
+	echo "dbpass: $dbpass"
+
+}
 
 # Swap contents of two files
 function swap() {
@@ -185,7 +226,6 @@ function git-orphan() {
 	git rm -rf .
 	rm '.gitignore'
 }
-
 
 
 
@@ -392,34 +432,64 @@ function php-fix-arrays () {
 	phpcbf $1 --standard=Generic --sniffs=Generic.Arrays.DisallowLongArraySyntax
 }
 
+function web-restart () {
+	sudo /usr/local/bin/brew services restart dnsmasq
+	sudo /usr/local/bin/brew services restart haproxy
+	sudo /usr/local/bin/brew services restart nginx
+	sudo /usr/local/bin/brew services restart varnish
+}
+
 function php-restart () {
-	/usr/local/bin/brew services restart php@5.6 
-	/usr/local/bin/brew services restart php@7.1 
-	/usr/local/bin/brew services restart php@7.2 
-	/usr/local/bin/brew services restart php@7.3 
-	/usr/local/bin/brew services restart php@7.4 
+	# /usr/local/bin/brew services restart php@5.6 
+	# /usr/local/bin/brew services restart php@7.0 
+	# /usr/local/bin/brew services restart php@7.1 
+	# /usr/local/bin/brew services restart php@7.2 
+	# /usr/local/bin/brew services restart php@7.3 
+	# /usr/local/bin/brew services restart php@7.4 
+	/usr/local/bin/brew services restart php@8.0 
+	/usr/local/bin/brew services restart php@8.1 
+	/usr/local/bin/brew services restart php@8.2
 	/usr/local/bin/brew services restart php
-	ln -nfs /Users/jerryprice/.config/valet/7.4.sock /Users/jerryprice/.config/valet/valet.sock
+	ln -nfs /Users/jerryprice/.config/valet/8.1.sock /Users/jerryprice/.config/valet/valet.sock
 }
 
 function php-stop () {
-	/usr/local/bin/brew services stop php@5.6 
-	/usr/local/bin/brew services stop php@7.1 
-	/usr/local/bin/brew services stop php@7.2 
-	/usr/local/bin/brew services stop php@7.3 
-	/usr/local/bin/brew services stop php@7.4 
+	# /usr/local/bin/brew services stop php@5.6 
+	# /usr/local/bin/brew services stop php@7.0 
+	# /usr/local/bin/brew services stop php@7.1 
+	# /usr/local/bin/brew services stop php@7.2 
+	# /usr/local/bin/brew services stop php@7.3 
+	# /usr/local/bin/brew services stop php@7.4 
+	/usr/local/bin/brew services stop php@8.0 
+	/usr/local/bin/brew services stop php@8.1 
+	/usr/local/bin/brew services stop php@8.2 
 	/usr/local/bin/brew services stop php
 }
 
 function php-start () {
-	/usr/local/bin/brew services start php@5.6 
-	/usr/local/bin/brew services start php@7.1 
-	/usr/local/bin/brew services start php@7.2 
-	/usr/local/bin/brew services start php@7.3 
-	/usr/local/bin/brew services start php@7.4 
+	# /usr/local/bin/brew services start php@5.6 
+	# /usr/local/bin/brew services start php@7.0 
+	# /usr/local/bin/brew services start php@7.1 
+	# /usr/local/bin/brew services start php@7.2 
+	# /usr/local/bin/brew services start php@7.3 
+	# /usr/local/bin/brew services start php@7.4 
+	/usr/local/bin/brew services start php@8.0 
+	/usr/local/bin/brew services start php@8.1 
+	/usr/local/bin/brew services start php@8.2 
 	/usr/local/bin/brew services start php
-	ln -nfs /Users/jerryprice/.config/valet/7.4.sock /Users/jerryprice/.config/valet/valet.sock
+	ln -nfs /Users/jerryprice/.config/valet/8.1.sock /Users/jerryprice/.config/valet/valet.sock
 }
+
+# function brew-services() {
+# 	if [ $# -lt 1 ]; then
+# 		echo "Missing argument";
+# 		return 1;
+# 	fi
+
+# 	action=$1
+# 	app=$
+
+# }
 
 function unserialize() {
 
@@ -429,7 +499,8 @@ function unserialize() {
 		# php -r " echo print_r(unserialize('"$1"')); echo \"\\n\";"
 	else
 		STRING=`pbpaste`
-		php -r " echo print_r(unserialize('"$STRING"')); echo \"\\n\";"
+		echo "dump( unserialize('"$STRING"') );" | php -a
+		# php -r " echo print_r(unserialize('"$STRING"')); echo \"\\n\";"
 	fi
 
 }
@@ -459,6 +530,11 @@ function vipwp() {
 	echo "\n\n$TIME : $RUN" >> "$FILE"
 	eval ${RUN} | tee -a $FILE
 }
+
+alias frbny.prod='vipwp @frbny.production --url=https://libertystreeteconomics.newyorkfed.org/ '
+alias frbny.qmo='vipwp @frbny.qmo --url=https://frbny-qmo.go-vip.net/ '
+alias frbny.qa='vipwp @frbny.qa --url=https://frbny-qa.go-vip.net/ '
+alias frbny.dev='vipwp @frbny.development --url=https://frbny-development.go-vip.net/libertystreeteconomics/ '
 
 function pantheon_rsync_push() {
 	
@@ -639,4 +715,13 @@ function haa-counts(){
 #   zstyle ':completion:*:ssh:*' hosts $h
 #   zstyle ':completion:*:slogin:*' hosts $h
 # fi
+
+function paste() {
+	local file=${1:-/dev/stdin}
+	# curl --data-binary @${file} https://paste.rs
+	url="$(curl -s --data-binary @${file} https://paste.rs)"
+	echo $url
+	echo $url | pbcopy
+}
+
 

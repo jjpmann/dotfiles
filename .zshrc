@@ -1,3 +1,5 @@
+# date +"%s"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -5,6 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# date +"%s"
 
 # Path to your dotfiles installation.
 export DOTFILES=$HOME/.dotfiles
@@ -67,10 +70,29 @@ plugins=(brew bundler composer git git-extras github httpie npm osx rvm sublime 
 # Activate Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
 
+# echo $ZSH/oh-my-zsh.sh loaded
+# date +"%s"
 
 # My Aliases and Paths
 source $DOTFILES/aliases.zsh
+# echo $DOTFILES/aliases.zsh loaded
+# date +"%s"
+
 source $DOTFILES/path.zsh
+# echo $DOTFILES/path.zsh loaded
+# date +"%s"
+
+# PHP Version Manager
+source ~/git/php-version/php-version.sh && php-version 8.1
+# echo ~/git/php-version/php-version.sh loaded
+# date +"%s"
+
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 
+# echo $NVM_DIR/nvm.sh loaded
+# date +"%s"
+
 
 # You may need to manually set your language environment
 export LC_ALL=en_US.UTF-8
@@ -95,4 +117,7 @@ export LANG=en_US.UTF-8
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $DOTFILES/.p10k.zsh ]] || source $DOTFILES/.p10k.zsh
+
+# echo $DOTFILES/.p10k.zsh loaded
+# date +"%s"
 

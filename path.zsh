@@ -42,13 +42,8 @@ PATH="$PATH:$HOME/.node/bin"
 
 export PATH=$PATH;
 
-# Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
 # Use project specific binaries before global ones
-PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:$PATH"
+PATH="node_modules/.bin:vendor/bin:includes/vendor/bin:../vendor/bin:$PATH"
 
 export PATH=$PATH;
 
@@ -61,7 +56,4 @@ export TZ="America/New_York";
 export COMPOSER_HOME="$HOME/.composer"
 export EDITOR='subl'
 
-export SLIMERJSLAUNCHER=/Applications/Firefox50.app/Contents/MacOS/firefox
-
-# Make sure PHP 7.1 is loaded
-source ~/git/php-version/php-version.sh && php-version 7.4
+# export SLIMERJSLAUNCHER=/Applications/Firefox50.app/Contents/MacOS/firefox

@@ -42,19 +42,22 @@ brew 'jpeg'
 
 # Development
 brew 'php-version'
-#brew 'php54', args: ['with-debug']
-#brew 'php55', args: ['with-debug']
-brew 'php@5.6', args: ['with-debug']
-brew 'php@7.0', args: ['with-debug']
-brew 'php@7.1', args: ['with-debug']
-brew 'php@7.2', args: ['with-debug']
+# brew 'php54', args: ['with-debug']
+# brew 'php55', args: ['with-debug']
+# brew 'php@5.6', args: ['with-debug']
+# brew 'php@7.0', args: ['with-debug']
+# brew 'php@7.1', args: ['with-debug']
+# brew 'php@7.2', args: ['with-debug']
 brew 'php@7.3', args: ['with-debug']
 brew 'php@7.4', args: ['with-debug']
-#brew 'php71-intl'
+brew 'php@8.0', args: ['with-debug']
+brew 'php@8.1', args: ['with-debug']
+brew 'php@8.2', args: ['with-debug']
+
 brew 'mariadb'
 
 # Apps
-cask 'aerial'
+# cask 'aerial'
 cask 'alfred'
 #cask 'caffeine'
 cask 'clipy'
@@ -67,15 +70,15 @@ cask 'iterm2'
 #cask 'mysqlworkbench'
 #cask 'phpstorm'
 #cask 'quip'
-cask 'sequel-pro'
-cask 'shuttle'
-cask 'slack'
-cask 'sublime-text'
+# cask 'sequel-pro'
+# cask 'shuttle'
+# cask 'slack'
+# cask 'sublime-text'
 #cask 'tower'
 #cask 'transmit'
-cask 'vagrant'
-cask 'virtualbox'
-cask 'virtualbox-extension-pack'
+# cask 'vagrant'
+# cask 'virtualbox'
+# cask 'virtualbox-extension-pack'
 cask 'vlc'
 cask 'visual-studio-code'
 
